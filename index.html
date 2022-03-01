@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Lottery</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <div id="content-wrapper">
+        <header>
+            <h1>Lottery</h1>
+        </header>
+
+        <main>
+            <p>Your Pick: </p>
+            <p id="unsorted-pick"></p>
+            <p>Your Pick Sorted: </p>
+            <p id="sorted-pick"></p>
+            <p>Winning Numbers: </p>
+            <p id="winning-numbers"></p>
+            <p>Numbers Matching: </p>
+            <p id="numbers-matching"></p>
+            <p>Lucky Ball: </p>
+            <p id="lucky-ball"></p>
+            <p id="winnings-label">Your Winnings: </p>
+            <p id="winnings"></p>
+        </main>
+    </div>
+
+    <script>
+        // Winning lottery numbers
+        winningPick = [12, 15, 24, 35, 48];
+        winningLuckyBall = 3;
+
+        // Generate user's lottery pick and luck ball number
+        unsortedPick = [];
+        for (i = 0; i < 5; i++) {
+            unsortedPick.push((Math.floor (Math.random() * 48) + 1));
+        }
+        sortedPick = [...unsortedPick].sort(function(a, b){return a-b});
+        luckyBall = (Math.floor (Math.random() * 18) + 1);
+
+        // Calculate matches
+        wonLuckyBall = (luckyBall == winningLuckyBall);
+        numMatching = 0;
+        winningPickCopy = [...winningPick];
+        for (i = 0; i < sortedPick.length; i++) {
+            if (winningPickCopy.includes(sortedPick[i])) {
+                numMatching++;
+                winningPickCopy.splice(winningPickCopy.indexOf(sortedPick[i]), 1);
+            }
+        }
+
+        // Determine payout
+        payout= "$0";
+        switch (numMatching) {
+            case 5:
+                if (wonLuckyBall) {
+                    payout = "$7,000 a WEEK for LIFE";
+                } else {
+                    payout = "$25,000 a YEAR for LIFE";
+                }
+                break;
+            case 4:
+                if (wonLuckyBall) {
+                    payout = "$5,000";
+                } else {
+                    payout = "$200";
+                }
+                break;
+            case 3:
+                if (wonLuckyBall) {
+                    payout = "$150";
+                } else {
+                    payout = "$20";
+                }
+                break;
+            case 2:
+                if (wonLuckyBall) {
+                    payout = "$25";
+                } else {
+                    payout = "$3";
+                }
+                break;
+            case 1:
+                if (wonLuckyBall) {
+                    payout = "$6";
+                }
+                break;
+            case 0:
+                if (wonLuckyBall) {
+                    payout = "$4";
+                }
+        }
+
+        // Display info
+        $("#unsorted-pick").html(unsortedPick.join(' ') + " lucky " + luckyBall);
+        $("#sorted-pick").html(sortedPick.join(' ') + " lucky " + luckyBall);
+        $("#winning-numbers").html(winningPick.join(' ') + " lucky " + winningLuckyBall);
+        $("#numbers-matching").html(numMatching);
+        $("#lucky-ball").html(wonLuckyBall ? "Lucky ball matches" : "Lucky ball does not match");
+        $("#winnings").html(payout);
+    </script>
+</body>
+</html>
